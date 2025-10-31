@@ -4,9 +4,11 @@
   "description": "Backend API для Telegram Mini App - платформа курсов",
   "main": "dist/index.js",
   "scripts": {
+    "setup": "tsx src/scripts/check-env.ts && npm run prisma:generate && npm run prisma:migrate",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "check-env": "tsx src/scripts/check-env.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
