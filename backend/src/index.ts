@@ -19,8 +19,10 @@ import progressRoutes from './routes/progress.routes';
 import reviewRoutes from './routes/review.routes';
 import promoRoutes from './routes/promo.routes';
 import adminRoutes from './routes/admin.routes';
+import path from 'path';
 
-dotenv.config();
+// Загружаем .env из корня проекта
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;

@@ -1,5 +1,6 @@
 import { Telegraf } from 'telegraf';
 import dotenv from 'dotenv';
+import path from 'path';
 import { logger } from './utils/logger';
 
 // Handlers
@@ -10,7 +11,8 @@ import { profileHandler } from './handlers/profile';
 import { supportHandler } from './handlers/support';
 import { adminHandler } from './handlers/admin';
 
-dotenv.config({ path: '../.env' });
+// Загружаем .env из корня проекта
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const WEBAPP_URL = process.env.WEBAPP_URL;
