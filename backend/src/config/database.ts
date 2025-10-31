@@ -1,11 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
-import dotenv from 'dotenv';
-import path from 'path';
 
-// ВАЖНО: Загружаем .env ДО создания PrismaClient
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
-
+// .env уже загружен в config/env.ts
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === 'development'
     ? ['query', 'error', 'warn']

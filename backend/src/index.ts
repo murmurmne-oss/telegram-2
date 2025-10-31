@@ -1,10 +1,12 @@
+// ВАЖНО: Загружаем .env в самом начале!
+import './config/env';
+
 import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
@@ -19,10 +21,6 @@ import progressRoutes from './routes/progress.routes';
 import reviewRoutes from './routes/review.routes';
 import promoRoutes from './routes/promo.routes';
 import adminRoutes from './routes/admin.routes';
-import path from 'path';
-
-// Загружаем .env из корня проекта
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
