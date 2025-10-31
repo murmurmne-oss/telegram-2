@@ -1,0 +1,392 @@
+// Prisma Schema для Telegram Course Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================
+// ПОЛЬЗОВАТЕЛИ
+// ===========================
+
+model User {
+  id            String    @id @default(uuid())
+  telegramId    BigInt    @unique
+  username      String?
+  firstName     String?
+  lastName      String?
+  photoUrl      String?
+  languageCode  String?   @default("ru")
+  role          Role      @default(USER)
+  isBlocked     Boolean   @default(false)
+  isPremium     Boolean   @default(false)
+
+  // Связи
+  purchases     Purchase[]
+  progress      CourseProgress[]
+  reviews       Review[]
+  certificates  Certificate[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+// ===========================
+// КУРСЫ
+// ===========================
+
+model Course {
+  id              String    @id @default(uuid())
+  title           String
+  description     String    @db.Text
+  shortDesc       String?   @db.Text
+  coverImage      String?
+  previewVideo    String?
+
+  price           Decimal   @db.Decimal(10, 2)
+  discountPrice   Decimal?  @db.Decimal(10, 2)
+  currency        String    @default("RUB")
+
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+
+  isPublished     Boolean   @default(false)
+  level           Level     @default(BEGINNER)
+  duration        Int       // общая продолжительность в минутах
+
+  // SEO
+  slug            String    @unique
+  metaTitle       String?
+  metaDescription String?
+
+  // Статистика
+  viewCount       Int       @default(0)
+  enrollCount     Int       @default(0)
+  rating          Decimal?  @db.Decimal(3, 2)
+  reviewCount     Int       @default(0)
+
+  // Связи
+  lessons         Lesson[]
+  purchases       Purchase[]
+  reviews         Review[]
+  tags            CourseTag[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("courses")
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+// ===========================
+// КАТЕГОРИИ
+// ===========================
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  icon        String?
+  color       String?   // hex цвет для UI
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+
+  courses     Course[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+// ===========================
+// ТЕГИ
+// ===========================
+
+model Tag {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  slug      String      @unique
+
+  courses   CourseTag[]
+
+  createdAt DateTime    @default(now())
+
+  @@map("tags")
+}
+
+model CourseTag {
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, tagId])
+  @@map("course_tags")
+}
+
+// ===========================
+// УРОКИ
+// ===========================
+
+model Lesson {
+  id          String    @id @default(uuid())
+  title       String
+  description String?   @db.Text
+  content     String?   @db.Text // markdown контент
+
+  videoUrl    String?
+  videoDuration Int?    // в секундах
+
+  // Дополнительные материалы
+  materials   LessonMaterial[]
+
+  order       Int
+  isFree      Boolean   @default(false)  // бесплатный preview
+
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  progress    LessonProgress[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("lessons")
+}
+
+// Дополнительные материалы урока
+model LessonMaterial {
+  id          String    @id @default(uuid())
+  title       String
+  type        MaterialType
+  url         String
+  fileSize    Int?      // в байтах
+
+  lessonId    String
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+
+  @@map("lesson_materials")
+}
+
+enum MaterialType {
+  PDF
+  VIDEO
+  LINK
+  ARCHIVE
+  IMAGE
+}
+
+// ===========================
+// ПОКУПКИ
+// ===========================
+
+model Purchase {
+  id          String          @id @default(uuid())
+
+  userId      String
+  user        User            @relation(fields: [userId], references: [id])
+
+  courseId    String
+  course      Course          @relation(fields: [courseId], references: [id])
+
+  amount      Decimal         @db.Decimal(10, 2)
+  currency    String
+  status      PurchaseStatus  @default(PENDING)
+
+  // Платёжная информация
+  paymentId   String?
+  paymentMethod String?
+
+  // Промокод
+  promoCodeId String?
+  promoCode   PromoCode?     @relation(fields: [promoCodeId], references: [id])
+  discountAmount Decimal?    @db.Decimal(10, 2)
+
+  // Telegram Payment
+  telegramPaymentChargeId String?
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  completedAt DateTime?
+
+  @@unique([userId, courseId])
+  @@map("purchases")
+}
+
+enum PurchaseStatus {
+  PENDING       // Ожидает оплаты
+  PROCESSING    // Обрабатывается
+  COMPLETED     // Успешно
+  FAILED        // Ошибка
+  REFUNDED      // Возврат
+  CANCELLED     // Отменён
+}
+
+// ===========================
+// ПРОГРЕСС
+// ===========================
+
+model CourseProgress {
+  id          String    @id @default(uuid())
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+
+  courseId    String
+
+  progress    Int       @default(0) // процент 0-100
+  isCompleted Boolean   @default(false)
+
+  lessons     LessonProgress[]
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, courseId])
+  @@map("course_progress")
+}
+
+model LessonProgress {
+  id          String          @id @default(uuid())
+
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
+
+  lessonId    String
+  lesson      Lesson          @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  isCompleted Boolean         @default(false)
+  watchTime   Int             @default(0) // в секундах
+
+  // Заметки пользователя
+  notes       String?         @db.Text
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([courseProgressId, lessonId])
+  @@map("lesson_progress")
+}
+
+// ===========================
+// ОТЗЫВЫ
+// ===========================
+
+model Review {
+  id        String    @id @default(uuid())
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+
+  courseId  String
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  rating    Int       // 1-5
+  comment   String?   @db.Text
+
+  isVisible Boolean   @default(true) // модерация
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, courseId])
+  @@map("reviews")
+}
+
+// ===========================
+// СЕРТИФИКАТЫ
+// ===========================
+
+model Certificate {
+  id          String    @id @default(uuid())
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+
+  courseId    String
+  courseTitle String
+
+  certificateNumber String @unique
+  certificateUrl    String
+
+  issuedAt    DateTime  @default(now())
+
+  @@map("certificates")
+}
+
+// ===========================
+// ПРОМОКОДЫ
+// ===========================
+
+model PromoCode {
+  id          String    @id @default(uuid())
+  code        String    @unique
+
+  type        DiscountType
+  value       Int       // процент или фиксированная сумма
+
+  // Ограничения
+  minPurchaseAmount Decimal? @db.Decimal(10, 2)
+  maxUses     Int?
+  usedCount   Int       @default(0)
+
+  // Применимость
+  courseIds   String[]  // массив ID курсов (пусто = все курсы)
+
+  // Период действия
+  validFrom   DateTime
+  validUntil  DateTime
+
+  isActive    Boolean   @default(true)
+
+  purchases   Purchase[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("promo_codes")
+}
+
+enum DiscountType {
+  PERCENTAGE  // процент
+  FIXED       // фиксированная сумма
+}
+
+// ===========================
+// НАСТРОЙКИ
+// ===========================
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   // string, number, boolean, json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
