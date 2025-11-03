@@ -9,17 +9,22 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      {/* Header with white flower background */}
-      <header className="relative bg-gradient-to-r from-[#F173A5] to-[#E91E63] px-4 pt-12 pb-16 overflow-hidden">
-        {/* White flower background shape - larger */}
-        <div className="absolute top-4 right-[-20px] w-[280px] h-[280px] bg-white/30 rounded-full blur-3xl"></div>
-        <div className="absolute top-8 right-[-40px] w-[240px] h-[240px] bg-white/20 rounded-full blur-2xl"></div>
+      {/* Header with white flower background image */}
+      <header className="relative bg-[#F173A5] px-4 pt-10 pb-12 overflow-hidden" style={{ height: '250px' }}>
+        {/* White flower background image */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-full opacity-30 bg-center bg-contain bg-no-repeat pointer-events-none"
+          style={{
+            backgroundImage: 'url(https://i.postimg.cc/tgtc7FJZ/Neutral-Black-And-White-Minimalist-Aesthetic-Modern-Simple-Laser-Hair-Removal-Instagram-Post.png)',
+            zIndex: 0
+          }}
+        ></div>
 
         <div className="max-w-md mx-auto relative z-10">
-          <h1 className="text-white text-3xl font-semibold mb-2 drop-shadow-lg">
+          <h1 className="text-black text-3xl font-semibold mb-2">
             Hello, {userName}!
           </h1>
-          <p className="text-white/95 text-base">
+          <p className="text-black text-base">
             Welcome to Sexual Wellness world MUR MUR
           </p>
         </div>
@@ -53,11 +58,11 @@ export default function HomePage() {
 
         {/* New To Discover Section */}
         <div
-          className="bg-gradient-to-r from-[#F173A5] to-[#E91E63] rounded-r-3xl py-4 px-6 mb-6 cursor-pointer active:scale-95 transition-transform shadow-md w-[150px]"
+          className="bg-[#F173A5] rounded-r-[50px] py-4 px-6 mb-6 cursor-pointer active:scale-95 transition-transform shadow-md w-fit max-w-[200px]"
           style={{ marginLeft: '-1rem' }}
           onClick={() => navigate('/courses')}
         >
-          <p className="text-white text-lg font-semibold">
+          <p className="text-white text-2xl font-bold leading-tight">
             New<br />To discover
           </p>
         </div>
@@ -94,28 +99,25 @@ export default function HomePage() {
             ].map((course) => (
               <div
                 key={course.id}
-                className="rounded-2xl overflow-hidden shadow-lg cursor-pointer active:scale-95 transition-transform"
-                style={{ aspectRatio: '1/1' }}
+                className="rounded-3xl overflow-hidden shadow-lg cursor-pointer active:scale-95 transition-transform"
+                style={{ aspectRatio: '1/1', backgroundColor: course.bgColor }}
                 onClick={() => navigate(`/courses/${course.id}`)}
               >
                 {/* Image Section - Top 70% */}
-                <div
-                  className="h-[70%] flex items-center justify-center p-3"
-                  style={{ backgroundColor: course.bgColor }}
-                >
+                <div className="h-[70%] flex items-center justify-center p-3">
                   <img
                     src={course.image}
                     alt={course.title}
-                    className="w-full h-full object-contain"
+                    className="w-[80%] h-[80%] object-contain"
                   />
                 </div>
 
-                {/* Text Section - Bottom 30% */}
-                <div className="h-[30%] bg-white flex flex-col justify-center px-2 py-1">
-                  <p className="text-gray-800 text-[10px] font-semibold leading-tight mb-0.5">
+                {/* Text Section - Bottom 30% - NO WHITE BACKGROUND! */}
+                <div className="h-[30%] flex flex-col justify-center px-3 py-2">
+                  <p className="text-black text-[11px] font-semibold leading-tight mb-0.5">
                     {course.title}
                   </p>
-                  <p className="text-gray-600 text-[8px] leading-tight">
+                  <p className="text-black/80 text-[9px] leading-tight">
                     {course.subtitle}
                   </p>
                 </div>
