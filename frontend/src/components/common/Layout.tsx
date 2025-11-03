@@ -7,8 +7,8 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-telegram-bg">
-      <main className="flex-1 pb-16">
+    <div className="min-h-screen flex flex-col bg-white" style={{ fontFamily: 'Montserrat' }}>
+      <main className="flex-1 pb-[67px]">
         {children}
       </main>
       <Navigation />

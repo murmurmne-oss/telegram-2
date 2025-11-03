@@ -27,9 +27,12 @@ function App() {
       webApp.ready();
       webApp.expand();
 
-      // Установка цветов темы
-      webApp.setHeaderColor('bg_color');
-      webApp.setBackgroundColor('bg_color');
+      // Установка полноэкранного режима
+      webApp.isClosingConfirmationEnabled = false;
+
+      // Установка цветов темы (белый фон)
+      webApp.setHeaderColor('#FFFFFF');
+      webApp.setBackgroundColor('#FFFFFF');
 
       // Инициализация аутентификации
       initialize(webApp.initData);
