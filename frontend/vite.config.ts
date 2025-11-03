@@ -12,6 +12,15 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    allowedHosts: [
+      '.ngrok-free.dev',
+      '.ngrok.io',
+      '.ngrok-free.app',
+      'localhost'
+    ],
+    hmr: {
+      clientPort: 443
+    }
   },
   build: {
     outDir: 'dist',
