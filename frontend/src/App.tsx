@@ -10,7 +10,14 @@ import CourseDetailPage from './pages/CourseDetailPage';
 import LessonPage from './pages/LessonPage';
 import MyCoursesPage from './pages/MyCoursesPage';
 import ProfilePage from './pages/ProfilePage';
-import AdminPage from './pages/AdminPage';
+
+// Admin Pages
+import AdminRoute from './pages/admin/AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import CoursesList from './pages/admin/CoursesList';
+import CourseEditor from './pages/admin/CourseEditor';
+import UsersManagement from './pages/admin/UsersManagement';
+import PromoCodesPage from './pages/admin/PromoCodesPage';
 
 // Components
 import Layout from './components/common/Layout';
@@ -70,14 +77,12 @@ function App() {
         />
 
         {/* Admin Routes */}
-        <Route
-          path="/admin/*"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/courses" element={<AdminRoute><CoursesList /></AdminRoute>} />
+        <Route path="/admin/courses/new" element={<AdminRoute><CourseEditor /></AdminRoute>} />
+        <Route path="/admin/courses/:id/edit" element={<AdminRoute><CourseEditor /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute><UsersManagement /></AdminRoute>} />
+        <Route path="/admin/promo-codes" element={<AdminRoute><PromoCodesPage /></AdminRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
