@@ -11,9 +11,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Header with white flower background image - VISIBLE (NO opacity) */}
       <header className="relative bg-[#F173A5] overflow-hidden flex items-center justify-center" style={{ height: '280px' }}>
-        {/* White flower background image - FULL VISIBILITY */}
+        {/* White flower background image - FULL VISIBILITY - BIGGER SIZE */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[90%] bg-center bg-contain bg-no-repeat pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-center bg-contain bg-no-repeat pointer-events-none"
           style={{
             backgroundImage: 'url(https://i.postimg.cc/tgtc7FJZ/Neutral-Black-And-White-Minimalist-Aesthetic-Modern-Simple-Laser-Hair-Removal-Instagram-Post.png)',
             opacity: 1,
@@ -117,7 +117,8 @@ export default function HomePage() {
                 style={{
                   minWidth: '160px',
                   width: '160px',
-                  height: '200px',
+                  height: '160px',
+                  aspectRatio: '1/1',
                   backgroundColor: course.bgColor,
                   scrollSnapAlign: 'start'
                 }}
@@ -133,13 +134,13 @@ export default function HomePage() {
                   />
                 </div>
 
-                {/* Text Section - Bottom 35% - Text lifted up */}
+                {/* Text Section - Bottom 35% - Text lifted up higher */}
                 <div
                   className="flex flex-col justify-start"
                   style={{
                     height: '35%',
-                    padding: '16px 12px',
-                    gap: '4px'
+                    padding: '20px 12px 8px 12px',
+                    gap: '2px'
                   }}
                 >
                   <h3 className="text-black text-base font-semibold m-0 leading-tight">
