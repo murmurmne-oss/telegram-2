@@ -4,9 +4,16 @@
 
 :root {
   /* Brand colors */
+  --primary-pink: #F173A5;
+  --primary-orange: #FB3B00;
+  --primary-yellow: #D6DB00;
+  --white: #FFFFFF;
+  --text-dark: #333333;
+
+  /* Legacy support */
   --brand-pink: #F173A5;
   --brand-pink-dark: #E91E63;
-  --brand-orange: #F14D19;
+  --brand-orange: #FB3B00;
   --brand-orange-hover: #FF5722;
 }
 

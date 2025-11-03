@@ -9,20 +9,24 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      {/* Compact Header */}
-      <header className="bg-gradient-to-r from-[#F173A5] to-[#E91E63] px-4 pt-6 pb-4">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-white text-2xl font-semibold mb-1">
-            Hello, {userName}! 👋
+      {/* Header with white flower background */}
+      <header className="relative bg-gradient-to-r from-[#F173A5] to-[#E91E63] px-4 pt-12 pb-16 overflow-hidden">
+        {/* White flower background shape - larger */}
+        <div className="absolute top-4 right-[-20px] w-[280px] h-[280px] bg-white/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-8 right-[-40px] w-[240px] h-[240px] bg-white/20 rounded-full blur-2xl"></div>
+
+        <div className="max-w-md mx-auto relative z-10">
+          <h1 className="text-white text-3xl font-semibold mb-2 drop-shadow-lg">
+            Hello, {userName}!
           </h1>
-          <p className="text-white/90 text-sm">
+          <p className="text-white/95 text-base">
             Welcome to Sexual Wellness world MUR MUR
           </p>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="px-4 pt-6 pb-24 max-w-md mx-auto">
+      <div className="px-4 pt-6 pb-28 max-w-md mx-auto">
         {/* Main Course Banner */}
         <div
           className="relative w-full mb-6 rounded-2xl overflow-hidden shadow-lg cursor-pointer active:scale-95 transition-transform"
@@ -49,12 +53,12 @@ export default function HomePage() {
 
         {/* New To Discover Section */}
         <div
-          className="bg-gradient-to-r from-[#F173A5] to-[#E91E63] rounded-r-3xl py-4 px-6 mb-6 cursor-pointer active:scale-95 transition-transform shadow-md"
+          className="bg-gradient-to-r from-[#F173A5] to-[#E91E63] rounded-r-3xl py-4 px-6 mb-6 cursor-pointer active:scale-95 transition-transform shadow-md w-[150px]"
           style={{ marginLeft: '-1rem' }}
           onClick={() => navigate('/courses')}
         >
           <p className="text-white text-lg font-semibold">
-            New<br />To discover 🔥
+            New<br />To discover
           </p>
         </div>
 
@@ -71,47 +75,49 @@ export default function HomePage() {
                 title: 'Course 1',
                 subtitle: 'Description',
                 image: 'https://i.postimg.cc/gj37dLxM/Dizajn-bez-nazvania-2.png',
+                bgColor: '#F173A5',
               },
               {
                 id: 2,
                 title: 'Course 2',
                 subtitle: 'Description',
                 image: 'https://i.postimg.cc/QCqq0Q9D/Dizajn-bez-nazvania-6-removebg-preview.png',
+                bgColor: '#FB3B00',
               },
               {
                 id: 3,
                 title: 'Course 3',
                 subtitle: 'Description',
                 image: 'https://i.postimg.cc/j2RHwD8z/Dizajn-bez-nazvania-7-removebg-preview.png',
+                bgColor: '#D6DB00',
               },
             ].map((course) => (
               <div
                 key={course.id}
-                className="relative bg-gradient-to-br from-[#F173A5] to-[#E91E63] rounded-2xl overflow-hidden shadow-lg cursor-pointer active:scale-95 transition-transform border border-black/10"
+                className="rounded-2xl overflow-hidden shadow-lg cursor-pointer active:scale-95 transition-transform"
                 style={{ aspectRatio: '1/1' }}
                 onClick={() => navigate(`/courses/${course.id}`)}
               >
-                {/* Semi-transparent overlay for better text contrast */}
-                <div className="absolute inset-0 bg-black/20 z-0"></div>
+                {/* Image Section - Top 70% */}
+                <div
+                  className="h-[70%] flex items-center justify-center p-3"
+                  style={{ backgroundColor: course.bgColor }}
+                >
+                  <img
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
 
-                {/* Content */}
-                <div className="relative z-10 h-full flex flex-col justify-between p-3">
-                  <div className="text-center">
-                    <p className="text-white text-xs font-semibold drop-shadow-lg mb-1">
-                      {course.title}
-                    </p>
-                    <p className="text-white/90 text-[10px] drop-shadow-md">
-                      {course.subtitle}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-center items-end">
-                    <img
-                      src={course.image}
-                      alt={course.title}
-                      className="w-16 h-16 object-contain drop-shadow-xl"
-                    />
-                  </div>
+                {/* Text Section - Bottom 30% */}
+                <div className="h-[30%] bg-white flex flex-col justify-center px-2 py-1">
+                  <p className="text-gray-800 text-[10px] font-semibold leading-tight mb-0.5">
+                    {course.title}
+                  </p>
+                  <p className="text-gray-600 text-[8px] leading-tight">
+                    {course.subtitle}
+                  </p>
                 </div>
               </div>
             ))}
@@ -120,7 +126,7 @@ export default function HomePage() {
 
         {/* Additional Info */}
         <div className="text-center text-gray-500 text-sm mt-8">
-          <p>Explore our courses and start learning today! 📚</p>
+          <p>Explore our courses and start learning today!</p>
         </div>
       </div>
     </div>
