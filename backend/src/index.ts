@@ -22,6 +22,13 @@ import reviewRoutes from './routes/review.routes';
 import promoRoutes from './routes/promo.routes';
 import adminRoutes from './routes/admin.routes';
 
+// New comprehensive API routes
+import coursesRoutes from './routes/courses';
+import lessonsRoutes from './routes/lessons';
+import adminApiRoutes from './routes/admin';
+import certificatesRoutes from './routes/certificates';
+import purchasesRoutes from './routes/purchases';
+
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
@@ -77,15 +84,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
+// API Routes (Legacy - keeping for backwards compatibility)
 app.use('/api/auth', authRoutes);
-app.use('/api/courses', courseRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/purchases', purchaseRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/promo', promoRoutes);
-app.use('/api/admin', adminRoutes);
+
+// New comprehensive API routes
+app.use('/api/courses', coursesRoutes);
+app.use('/api/lessons', lessonsRoutes);
+app.use('/api/admin', adminApiRoutes);
+app.use('/api/certificates', certificatesRoutes);
+app.use('/api/purchases', purchasesRoutes);
 
 // 404 Handler
 app.use('*', (req, res) => {
